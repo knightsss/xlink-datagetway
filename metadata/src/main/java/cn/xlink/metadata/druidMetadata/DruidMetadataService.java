@@ -16,61 +16,63 @@ import java.util.Map;
  */
 public class DruidMetadataService
 {
-	private DruidMetadataRepository queryMetadata;
+	private DruidMetadataRepository druidMetadata;
 	
 	public DruidMetadataService(DruidMetadataRepository druidMetadataRepository)
 	{
 		super();
-		this.queryMetadata = druidMetadataRepository;
+		this.druidMetadata = druidMetadataRepository;
 	}
 
 	public DruidMetadata create(DruidMetadata entity)
 	{
 		entity.setDeleted(false);
 		ValidationEngine.validateAndThrow(entity);
-		List<DruidMetadata> list = queryMetadata.find(entity.getUniqueFilter());
+		List<DruidMetadata> list = druidMetadata.find(entity.getUniqueFilter());
 
 		if (list.size() > 0) {
 			entity.setId(list.get(0).getId());
-			queryMetadata.update(entity);
-			return queryMetadata.read(entity.getId());
+			druidMetadata.update(entity);
+			return druidMetadata.read(entity.getId());
 		} else {
-			return queryMetadata.create(entity);
+			return druidMetadata.create(entity);
 		}
 	}
 
 	public DruidMetadata read(Identifier id)
     {
-		return queryMetadata.read(id);
+		DruidMetadata entity = druidMetadata.read(id);
+		if (entity.getDeleted()) return null;
+		return entity;
     }
 
 	public void update(DruidMetadata entity)
     {
     	entity.setDeleted(false);
 		ValidationEngine.validateAndThrow(entity);
-		queryMetadata.update(entity);
+		druidMetadata.update(entity);
     }
 
 	public void delete(Identifier id)
     {
 		DruidMetadata entity = this.read(id);
 		entity.setDeleted(true);
-		queryMetadata.update(entity);
+		druidMetadata.update(entity);
     }
 
 	public List<DruidMetadata> readAll(QueryFilter filter, QueryRange range, QueryOrder order)
     {
-		return queryMetadata.readAll(filter, range, order);
+		return druidMetadata.readAll(filter, range, order);
     }
 
 	public long count(QueryFilter filter)
     {
-		return queryMetadata.count(filter);
+		return druidMetadata.count(filter);
     }
 
     // get name type map
 	public Map<String, String> getTypeMap(DruidMetadata entity) {
-		List<DruidMetadata> list = queryMetadata.find(entity.getUniqueFilter());
+		List<DruidMetadata> list = druidMetadata.find(entity.getUniqueFilter());
 
 		if (list.size() > 0) {
 			Map<String, String> typeMap = new HashMap<>();

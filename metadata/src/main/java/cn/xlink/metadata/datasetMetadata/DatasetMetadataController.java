@@ -118,7 +118,7 @@ public class DatasetMetadataController
 		String id = request.getHeader(Constants.Url.SAMPLE_ID, "No resource ID supplied");
 		DatasetMetadata entity = request.getBodyAs(DatasetMetadata.class, "Resource details not provided");
 		// check auth
-		if (checkAuth(request, response) == null) return ;
+//		if (checkAuth(request, response) == null) return ;
 		entity.setId(Identifiers.MONGOID.parse(id));
 		service.update(entity);
 		response.setResponseNoContent();
@@ -128,7 +128,7 @@ public class DatasetMetadataController
 	{
 		String id = request.getHeader(Constants.Url.SAMPLE_ID, "No resource ID supplied");
 		// check auth
-		if (checkAuth(request, response) == null) return ;
+//		if (checkAuth(request, response) == null) return ;
 		service.delete(Identifiers.MONGOID.parse(id));
 		// send id to zk
 		response.setResponseNoContent();

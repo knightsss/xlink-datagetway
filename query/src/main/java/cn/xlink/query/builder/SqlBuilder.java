@@ -13,6 +13,7 @@ import static cn.xlink.query.domain.RequestBody.DEFAULT_THRESHOLD;
 
 /**
  * Created by Ghold on 2017/6/1.
+ * // todo 日志打印
  */
 public class SqlBuilder implements Builder{
     private RequestBody body;
@@ -245,6 +246,7 @@ public class SqlBuilder implements Builder{
 
     /**
      * 工具方法，防注入
+     * // todo 加强
      * @param str
      * @return
      */

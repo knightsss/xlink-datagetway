@@ -36,7 +36,10 @@ public class CommonController extends AbstractController{
 
 		Map<String, Object> data = new HashMap<String, Object>();
 		try {
-			JSONArray list = this.getList(body, body.getFmt().parse(body.getStartTime()), body.getFmt().parse(body.getEndTime()));
+			JSONArray list = this.getList(body,
+					body.getFmt().parse(body.getStartTime()),
+					body.getFmt().parse(body.getEndTime())
+			);
 			data.put("results", this.getDataList(body, list));
 		} catch (Exception e) {
 			response.setException(e);

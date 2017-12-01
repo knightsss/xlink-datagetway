@@ -12,6 +12,7 @@ import java.sql.*;
 
 /**
  * Created by Ghold on 2017/8/3.
+ * // todo connection pool c3p0, ali druid
  */
 public class JdbcProxy implements Proxy {
 
@@ -27,6 +28,7 @@ public class JdbcProxy implements Proxy {
     }
 
     @Override
+    // todo close
     public JSONArray post(String sql, String path) throws IOException {
         try {
             Statement statement = connection.createStatement();

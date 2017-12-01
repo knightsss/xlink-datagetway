@@ -37,7 +37,9 @@ public class DatasetMetadataService
 
 	public DatasetMetadata read(Identifier id)
     {
-		return datasetMetadata.read(id);
+		DatasetMetadata entity = datasetMetadata.read(id);
+		if (entity.getDeleted()) return null;
+		return entity;
     }
 
 	public void update(DatasetMetadata entity)
