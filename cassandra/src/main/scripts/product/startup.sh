@@ -1,0 +1,1 @@
+usr/bin/nohup java -Xmx1G -Xms1G -server -XX:+PrintGCDetails -XX:+PrintGCDateStamps -cp ./lib/data-cassandra-XLINK.DATA_CASSANDRA_1.0.0_170823_RC.jar:./lib/* cn.xlink.cassandra.start.Main product >/dev/null 2>&1 &

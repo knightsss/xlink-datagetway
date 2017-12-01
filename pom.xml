@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<name>Xlink-Gateway</name>
+	<description>a gateway for analysis platform</description>
+	<url>https://github.com/RestExpress/RestExpress-Archetype</url>
+	<groupId>cn.xlink</groupId>
+	<artifactId>data-gateway</artifactId>
+	<version>0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
+	<modules>
+		<module>metadata</module>
+		<module>query</module>
+		<module>cassandra</module>
+  </modules>
+
+	<issueManagement>
+		<system>GitHub.com</system>
+		<url>https://github.com/RestExpress/RestExpress-Archetype/issues</url>
+	</issueManagement>
+
+	<scm>
+		<url>git@github.com:RestExpress/RestExpress-Archetype.git</url>
+		<connection>scm:git:git@github.com:RestExpress/RestExpress-Archetype.git</connection>
+		<developerConnection>scm:git:git@github.com:RestExpress/RestExpress-Archetype.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
+
+	<properties>
+		<maven-compiler-plugin.version>3.0</maven-compiler-plugin.version>
+		<maven-jar-plugin.version>2.4</maven-jar-plugin.version>
+		<maven-assembly-plugin.version>2.4</maven-assembly-plugin.version>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+				<version>2.4</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<version>1.4</version>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>tfredrich</id>
+			<name>Todd Fredrich</name>
+			<email>tfredrich@gmail.com</email>
+		</developer>
+	</developers>
+</project>

@@ -1,0 +1,54 @@
+<assembly>
+    <id>bin-${profiles.active}</id>
+    <formats>
+        <format>tar.gz</format>
+    </formats>
+
+    <dependencySets>
+        <!-- runtime scope jar -->
+        <dependencySet>
+            <useProjectArtifact>false</useProjectArtifact>
+            <outputDirectory>lib</outputDirectory>
+            <unpack>false</unpack>
+            <scope>runtime</scope>
+        </dependencySet>
+        <!-- system scope jar -->
+        <dependencySet>
+            <useProjectArtifact>false</useProjectArtifact>
+            <outputDirectory>lib</outputDirectory>
+            <unpack>false</unpack>
+            <scope>system</scope>
+        </dependencySet>
+    </dependencySets>
+
+    <fileSets>
+        <!-- script -->
+        <fileSet>
+            <directory>${project.build.scriptSourceDirectory}/${profiles.active}</directory>
+            <outputDirectory>bin</outputDirectory>
+        </fileSet>
+        <!-- config -->
+        <fileSet>
+            <directory>${project.basedir}/src/main/resources/config/${profiles.active}</directory>
+            <outputDirectory>config/${profiles.active}</outputDirectory>
+        </fileSet>
+        <!-- data-cassandra.jar -->
+        <fileSet>
+            <directory>${project.build.directory}</directory>
+            <outputDirectory>lib</outputDirectory>
+            <includes>
+                <include>*.jar</include>
+            </includes>
+        </fileSet>
+        <!-- Document-->
+        <fileSet>
+            <directory>${project.basedir}</directory>
+            <outputDirectory>doc</outputDirectory>
+            <includes>
+                <include>README*</include>
+                <include>LICENSE*</include>
+                <include>NOTICE*</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</assembly>
