@@ -109,11 +109,6 @@
 			<version>3.1.2</version>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-jcl</artifactId>
-			<version>1.7.15</version>
-		</dependency>
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.11</version>
@@ -121,7 +116,12 @@
 			<scope>test</scope>
 			<optional>true</optional>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>cn.xlink</groupId>
+            <artifactId>data-core</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>
@@ -144,7 +144,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix></classpathPrefix>
-							<mainClass>cn.xlink.metadata.Main</mainClass>
+							<mainClass>cn.xlink.data.metadata.Main</mainClass>
 						</manifest>
 					</archive>
 					<excludes>

@@ -19,7 +19,8 @@
 	<modules>
 		<module>metadata</module>
 		<module>query</module>
-		<module>cassandra</module>
+		<!--<module>cassandra</module>-->
+		<module>core</module>
   </modules>
 
 	<issueManagement>
