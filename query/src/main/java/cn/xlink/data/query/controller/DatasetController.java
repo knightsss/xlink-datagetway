@@ -65,32 +65,34 @@ public class DatasetController extends AbstractController{
             for (DatasetMetadataFieldEntity field: metadata.getFields()) {
                 switch (DataType.fromType(field.getType())) {
                     case Datapoint:
-                        try {
-                            String path = field.getField().replaceAll("\\{.*\\}", dataset.getProductId());
-                            JSONArray datapointFields = new JSONArray(this.getServiceMap().get(SERVICE_DATAPOINT).serve(
-                                    request,
-                                    response,
-                                    path,
-                                    Collections.singletonMap("Access-Token", request.getHeader("Access-Token"))));
-                            if (datapointFields.length() > 0) {
-                                for (int idx = 0; idx < datapointFields.length(); idx++) {
-                                    JSONObject datapoint;
-                                    if ((datapoint = datapointFields.getJSONObject(idx)) != null
-                                            && datapoint.getString("name") != null
-                                            && datapoint.getInt("index") >= 0
-                                            && datapoint.getInt("type") != 0) {
-                                        Map<String, Object> ret = new HashMap<>();
-                                        ret.put("name", "point_" + datapoint.getInt("index"));
-                                        ret.put("description", datapoint.getString("name"));
-                                        ret.put("type", datapoint.getInt("type"));
-                                        fields.add(ret);
+                        if (dataset.getProductId() != null && !dataset.getProductId().equals("")) {
+                            try {
+                                String path = field.getField().replaceAll("\\{.*\\}", dataset.getProductId());
+                                JSONArray datapointFields = new JSONArray(this.getServiceMap().get(SERVICE_DATAPOINT).serve(
+                                        request,
+                                        response,
+                                        path,
+                                        Collections.singletonMap("Access-Token", request.getHeader("Access-Token"))));
+                                if (datapointFields.length() > 0) {
+                                    for (int idx = 0; idx < datapointFields.length(); idx++) {
+                                        JSONObject datapoint;
+                                        if ((datapoint = datapointFields.getJSONObject(idx)) != null
+                                                && datapoint.getString("name") != null
+                                                && datapoint.getInt("index") >= 0
+                                                && datapoint.getInt("type") != 0) {
+                                            Map<String, Object> ret = new HashMap<>();
+                                            ret.put("name", "point_" + datapoint.getInt("index"));
+                                            ret.put("description", datapoint.getString("name"));
+                                            ret.put("type", datapoint.getInt("type"));
+                                            fields.add(ret);
+                                        }
                                     }
                                 }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                response.setResponseCode(500);
+                                response.setException(e);
                             }
-                        } catch (Exception e){
-                            e.printStackTrace();
-                            response.setResponseCode(500);
-                            response.setException(e);
                         }
                         break;
                     default:

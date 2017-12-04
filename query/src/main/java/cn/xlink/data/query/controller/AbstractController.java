@@ -86,34 +86,35 @@ public class AbstractController {
                     switch (dataType) {
                         case Datapoint:
                             // Datapoint类型是为数据端点特定
-                            if (body.invalidProductId()) throw new Exception("Invalid product_id");
-                            String path = field.getField().replaceAll("\\{.*\\}", body.getOptions().getOrDefault("product_id", "").toString());
-                            JSONArray datapointFields = new JSONArray(this.serviceMap.get(SERVICE_DATAPOINT).serve(
-                                    request,
-                                    response,
-                                    path,
-                                    Collections.singletonMap("Access-Token", request.getHeader("Access-Token"))));
-                            if (datapointFields.length() > 0) {
-                                for (int idx = 0; idx < datapointFields.length(); idx ++) {
-                                    JSONObject datapoint;
-                                    int index;
-                                    int type;
+                            if (!body.invalidProductId()) {
+                                String path = field.getField().replaceAll("\\{.*\\}", body.getOptions().getOrDefault("product_id", "").toString());
+                                JSONArray datapointFields = new JSONArray(this.serviceMap.get(SERVICE_DATAPOINT).serve(
+                                        request,
+                                        response,
+                                        path,
+                                        Collections.singletonMap("Access-Token", request.getHeader("Access-Token"))));
+                                if (datapointFields.length() > 0) {
+                                    for (int idx = 0; idx < datapointFields.length(); idx++) {
+                                        JSONObject datapoint;
+                                        int index;
+                                        int type;
 
-                                    // 通过point_加上端点索引的方式唯一确定字段名称，进而与实际含义的名称进行映射，这样使得前端不需要关心抽象的信息
-                                    if ((datapoint = datapointFields.getJSONObject(idx)) != null
-                                            && (index = datapoint.getInt("index")) >= 0
-                                            && (type = datapoint.getInt("type")) > 0) {
-                                        dataType = DataType.fromType(type);
-                                        DatasetMetadataFieldEntity entity = new DatasetMetadataFieldEntity();
-                                        entity.setName("point_" + index);
-                                        entity.setSource(field.getSource());
-                                        entity.setType(type);
-                                        if (dataType.sqlDesc().equals("VARCHAR")) {
-                                            entity.setField(field.getSource() + ".\"" + index + "\"");
-                                        } else {
-                                            entity.setField("CAST (" + field.getSource() + ".\"" + index + "\" AS " + dataType.sqlDesc() + ")");
+                                        // 通过point_加上端点索引的方式唯一确定字段名称，进而与实际含义的名称进行映射，这样使得前端不需要关心抽象的信息
+                                        if ((datapoint = datapointFields.getJSONObject(idx)) != null
+                                                && (index = datapoint.getInt("index")) >= 0
+                                                && (type = datapoint.getInt("type")) > 0) {
+                                            dataType = DataType.fromType(type);
+                                            DatasetMetadataFieldEntity entity = new DatasetMetadataFieldEntity();
+                                            entity.setName("point_" + index);
+                                            entity.setSource(field.getSource());
+                                            entity.setType(type);
+                                            if (dataType.sqlDesc().equals("VARCHAR")) {
+                                                entity.setField(field.getSource() + ".\"" + index + "\"");
+                                            } else {
+                                                entity.setField("CAST (" + field.getSource() + ".\"" + index + "\" AS " + dataType.sqlDesc() + ")");
+                                            }
+                                            body.getFieldMap().put(entity.getName(), entity);
                                         }
-                                        body.getFieldMap().put(entity.getName(), entity);
                                     }
                                 }
                             }

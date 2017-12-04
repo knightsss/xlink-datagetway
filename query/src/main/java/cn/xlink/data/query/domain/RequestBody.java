@@ -99,15 +99,19 @@ public class RequestBody {
         // 时间字段在数据平台是必须的，单独处理的原因是，SQL对于时间的过滤需要特殊的格式，如必须加入Timestamp保留字
         if (cache.getTimeMap() != null && cache.getTimeMap().size() > 0) {
             DatasetMetadataFieldEntity entity;
-            Object name = options.getOrDefault("timefield", null);
+            Object name = options.getOrDefault("time_field", null);
             if (name == null
                     || (entity = cache.getTimeMap().getOrDefault(name.toString(), null)) == null) {
                 entity = cache.getDefaultTime();
             }
 
             this.timeField = new TimeField(entity.getName(), DataType.fromType(entity.getType()));
-            fieldMap.put(entity.getName(), entity);
+
+            fieldMap.putAll(cache.getTimeMap());
         }
+
+        // fieldMap中加入时间字段
+
 
         this.fieldMap = fieldMap;
 

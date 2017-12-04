@@ -31,13 +31,7 @@ public class CardController extends AbstractController {
 		RequestBody body;
 		if ((body = this.init(request, response)) == null) return null;
 
-		if (body.getFields().size() > 0 || body.getMetrics().size() != 1) {
-			response.setResponseCode(400);
-			response.setException(new Exception("Fields only allow one metric"));
-			return null;
-		} else {
-			metric = body.getMetrics().keySet().stream().findFirst().get();
-		}
+		if (this.checkFields(body, response)) return null;
 
 		Map<String, Double> data = new HashMap<String, Double>();
 		try {
@@ -53,6 +47,8 @@ public class CardController extends AbstractController {
 		RequestBody body;
 		if ((body = this.init(request, response)) == null) return null;
 
+		if (this.checkFields(body, response)) return null;
+
 		Map<String, Double> data = new HashMap<String, Double>();
 		try {
 			double lastYearTotal = this.getTotal(body, LAST_YEAR);
@@ -60,7 +56,7 @@ public class CardController extends AbstractController {
 				response.setException(new Exception("No last year total, don't support year_on_year calc!"));
 			} else {
 				double now = this.getTotal(body, NOW);
-				double yearOnYear = now / lastYearTotal;
+				double yearOnYear = (now / lastYearTotal - 1) * 100;
 				data.put("year_on_year", yearOnYear);
 			}
 		} catch (Exception e) {
@@ -73,6 +69,8 @@ public class CardController extends AbstractController {
 		RequestBody body;
 		if ((body = this.init(request, response)) == null) return null;
 
+		if (this.checkFields(body, response)) return null;
+
 		Map<String, Double> data = new HashMap<String, Double>();
 		try {
 			double lastMonthTotal = this.getTotal(body, LAST_MONTH);
@@ -80,7 +78,7 @@ public class CardController extends AbstractController {
 				response.setException(new Exception("No last month total, don't support month_on_month calc!"));
 			} else {
 				double now = this.getTotal(body, NOW);
-				double monthOnMonth = now / lastMonthTotal;
+				double monthOnMonth = (now / lastMonthTotal - 1) * 100;
 				data.put("month_on_month", monthOnMonth);
 			}
 		} catch (Exception e) {
@@ -124,5 +122,22 @@ public class CardController extends AbstractController {
 		} catch (JSONException e1) {
 			return 0.0;
 		}
+	}
+
+	/**
+	 * 检查指标卡字段及度量
+	 * @param body
+	 * @param response
+	 * @return
+	 */
+	private boolean checkFields(RequestBody body, Response response) {
+		if (body.getFields().size() > 0 || body.getMetrics().size() != 1) {
+			response.setResponseCode(400);
+			response.setException(new Exception("Fields only allow one metric"));
+			return true;
+		} else {
+			metric = body.getMetrics().keySet().stream().findFirst().get();
+		}
+		return false;
 	}
 }

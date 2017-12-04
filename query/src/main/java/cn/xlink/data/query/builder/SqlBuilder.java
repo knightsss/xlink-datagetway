@@ -1,5 +1,6 @@
 package cn.xlink.data.query.builder;
 
+import cn.xlink.data.metadata.datasetMetadata.DatasetMetadataFieldEntity;
 import cn.xlink.data.metadata.datasetMetadata.DatasetMetadataJoinEntity;
 import cn.xlink.data.query.domain.Metric;
 import cn.xlink.data.query.domain.RequestBody;
@@ -8,6 +9,8 @@ import cn.xlink.data.core.utils.DataType;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Ghold on 2017/6/1.
@@ -19,6 +22,7 @@ public class SqlBuilder implements Builder{
     private Date endTime;
 
     private DateFormat utcFmt =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final Pattern pattern = Pattern.compile("\\.*\\{(.*)\\}.*");
 
     public SqlBuilder() {}
 
@@ -61,7 +65,7 @@ public class SqlBuilder implements Builder{
         havingStatement.append(" HAVING ");
 
         // 是否显示时间列，select Timeseries
-        if (!body.invalidInterval()) {
+        if (body.getQueryType() == RequestBody.QUERY_TYPE_AGGREGATE && !body.invalidInterval()) {
             switch (body.getEngine()) {
                 case RequestBody.QUERY_ENGINE_DRUID:
                     selectList.add("FLOOR(__time to " + body.getOptions().get("interval") + ") __time");
@@ -72,7 +76,7 @@ public class SqlBuilder implements Builder{
                         return null;
                     }
                     selectList.add("DATE_TRUNC('" + body.getOptions().get("interval") +  "', "+ body.fieldExchange(body.getTimeField().getField()) + ") __time");
-                    groupByList.add("DATE_TRUNC('" + body.getOptions().get("interval") +  "', "+ body.fieldExchange(body.getTimeField().getField()) + ")");
+                    groupByList.add("DATE_TRUNC('" + body.getOptions().get("interval") + "', " + body.fieldExchange(body.getTimeField().getField()) + ")");
                     break;
                 default:
             }
@@ -144,8 +148,14 @@ public class SqlBuilder implements Builder{
         // 通过sourceMap得到fromList
         if (body.getSourceMap() != null
                 && body.getSourceMap().size() > 0) {
-            for (String source: body.getSourceMap().keySet()) {
-                fromList.add(body.getSourceMap().get(source) + " " + source);
+            for (String alias: body.getSourceMap().keySet()) {
+                String source = body.getSourceMap().get(alias);
+                Matcher m = pattern.matcher(source);
+                if (m.find()) {
+                    source = source.replaceAll("\\{.*\\}", body.getPreFilters().getOrDefault(m.group(1), "").toString());
+                }
+
+                fromList.add(source + " " + alias);
             }
         }
 
@@ -292,12 +302,12 @@ public class SqlBuilder implements Builder{
                 if ((value = filters.get(key)) != null) {
                     switch (key) {
                         case "$in":
-                            sql = this.filterObject(value, null, flag);
+                            sql = this.filterObject(value, parentKey, flag);
                             break;
                         case "$ne":
                         case "$nin":
                         case "$not":
-                            sql = this.filterObject(value, null, !flag);
+                            sql = this.filterObject(value, parentKey, !flag);
                             break;
                         case "$lt":
                         case "$gt":
@@ -344,7 +354,7 @@ public class SqlBuilder implements Builder{
             List<Object> values = (ArrayList<Object>) object;
             sql = (flag? " IN ":" NOT IN ") + "(";
             for (Object v : values) {
-                sql = sql + "\'" + transactSQLInjection(v.toString()) + "\',";
+                sql = typeFieldSql(sql, parentKey, v);
             }
             return sql.replaceAll(",$", ")");
         } else if (object instanceof java.util.HashMap) {
@@ -352,7 +362,7 @@ public class SqlBuilder implements Builder{
             return filterMap(filters, parentKey, flag);
         } else {
             sql = flag?" = ":" <> ";
-            return sql + "\'" + transactSQLInjection(object.toString()) + "\'";
+            return typeFieldSql(sql, parentKey, object);
         }
     }
 
@@ -505,5 +515,29 @@ public class SqlBuilder implements Builder{
             default:
         }
         return null;
+    }
+
+    private String typeFieldSql(String sql, String key, Object value) {
+        DatasetMetadataFieldEntity entity;
+        if ((entity = body.getFieldMap().getOrDefault(key, null)) != null) {
+            switch (DataType.fromType(entity.getType())) {
+                case String:
+                case ByteArray:
+                case Unkown:
+                    return sql + "\'" + transactSQLInjection(value.toString()) + "\'";
+                case Float:
+                case Byte:
+                case Int:
+                case Short:
+                case Boolean:
+                case UnsignedInt:
+                case UnsignedShort:
+                    return sql + transactSQLInjection(value.toString());
+                case Timestamp:
+                    return sql + "TIMESTAMP(\'" + transactSQLInjection(value.toString()) + "\')";
+                default:
+            }
+        }
+        return sql;
     }
 }

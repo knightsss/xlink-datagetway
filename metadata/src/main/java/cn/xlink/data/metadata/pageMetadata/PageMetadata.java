@@ -156,11 +156,11 @@ implements Linkable
 		this.layers = layers;
 	}
 
-	public List<PageMetadataComponentEntity> getCharts() {
+	public List<PageMetadataComponentEntity> getComponents() {
 		return components;
 	}
 
-	public void setCharts(List<PageMetadataComponentEntity> charts) {
+	public void setComponents(List<PageMetadataComponentEntity> components) {
 		this.components = components;
 	}
 
