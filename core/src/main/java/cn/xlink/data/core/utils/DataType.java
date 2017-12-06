@@ -10,7 +10,7 @@ public enum DataType {
 	/**
 	 * 未知类型
 	 */
-	Unkown(-1,"unknown","UNKNOWN","UNKNOWN"),
+	Unknown(-1,"unknown","UNKNOWN","UNKNOWN"),
 	/**
 	 * 布尔类型
 	 */
@@ -93,7 +93,7 @@ public enum DataType {
 				return dataType;
 			}
 		}
-		return Unkown;
+		return Unknown;
 	}
 	
 	public static final DataType fromDesc(String desc){
@@ -102,7 +102,7 @@ public enum DataType {
 				return dataType;
 			}
 		}
-		return Unkown;
+		return Unknown;
 	}
 
 	public static final boolean checkMetricType(DataType dataType) {

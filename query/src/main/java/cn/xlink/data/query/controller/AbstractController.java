@@ -161,6 +161,7 @@ public class AbstractController {
             case RequestBody.QUERY_ENGINE_PRESTO:
                 SqlBuilder builder = new SqlBuilder(body, startTime, endTime);
                 String sql = builder.build();
+                System.out.println(sql);
                 return (JSONArray) this.proxyMap.get(RequestBody.QUERY_ENGINE_PRESTO).post(sql, null);
             default:
                 return null;

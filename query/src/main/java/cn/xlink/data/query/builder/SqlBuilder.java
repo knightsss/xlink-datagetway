@@ -152,7 +152,7 @@ public class SqlBuilder implements Builder{
                 String source = body.getSourceMap().get(alias);
                 Matcher m = pattern.matcher(source);
                 if (m.find()) {
-                    source = source.replaceAll("\\{.*\\}", body.getPreFilters().getOrDefault(m.group(1), "").toString());
+                    source = source.replaceAll("\\{.*\\}", body.getOptions().getOrDefault(m.group(1), "").toString());
                 }
 
                 fromList.add(source + " " + alias);
@@ -523,7 +523,7 @@ public class SqlBuilder implements Builder{
             switch (DataType.fromType(entity.getType())) {
                 case String:
                 case ByteArray:
-                case Unkown:
+                case Unknown:
                     return sql + "\'" + transactSQLInjection(value.toString()) + "\'";
                 case Float:
                 case Byte:
