@@ -84,8 +84,5 @@ public abstract class Routes
 		server.uri("/v2/data_platform/page/{page_id}.{format}", config.getPageController())
 				.action("update", HttpMethod.PUT);
 
-//		server.uri("/v1/offline/query.{format}", config.getOfflineController())
-//				.action("query", HttpMethod.POST)
-//				.name(Constants.Routes.OFFLINE_QUERY);
     }
 }

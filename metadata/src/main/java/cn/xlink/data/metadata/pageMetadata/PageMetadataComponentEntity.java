@@ -1,5 +1,6 @@
 package cn.xlink.data.metadata.pageMetadata;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.strategicgains.repoexpress.mongodb.AbstractMongodbEntity;
 import com.strategicgains.syntaxe.annotation.StringValidation;
@@ -17,6 +18,7 @@ import java.util.Map;
 //@TokenBindings({
 //	@BindToken(value=Constants.Url.SAMPLE_ID, field="id")
 //})
+
 public class PageMetadataComponentEntity
 extends AbstractMongodbEntity
 implements Linkable
@@ -45,8 +47,11 @@ implements Linkable
 	/*图表布局设置*/
 	/*private Map<String, Object> layout;*/
 
-	/*数据*/
+	/*数据查询*/
 	private List<PageMetadataDataEntity> datas;
+
+	/*图表内容配置*/
+	private Map<String, Object> content;
 
 	/*图表样式配置*/
 	private Map<String, Object> style;
@@ -108,6 +113,14 @@ implements Linkable
 
 	public void setDatas(List<PageMetadataDataEntity> datas) {
 		this.datas = datas;
+	}
+
+	public Map<String, Object> getContent() {
+		return content;
+	}
+
+	public void setContent(Map<String, Object> content) {
+		this.content = content;
 	}
 
 	public Map<String, Object> getStyle() {

@@ -2,7 +2,9 @@ package cn.xlink.data.metadata.pageMetadata;
 
 import cn.xlink.data.metadata.Constants;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.strategicgains.hyperexpress.annotation.BindToken;
 import com.strategicgains.hyperexpress.annotation.TokenBindings;
