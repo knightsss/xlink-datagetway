@@ -7,7 +7,6 @@ import java.util.*;
 import cn.xlink.data.core.service.Service;
 import cn.xlink.data.query.domain.RequestBody;
 import cn.xlink.data.core.proxy.Proxy;
-import cn.xlink.data.metadata.datasetMetadata.DatasetMetadataService;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.restexpress.Request;
@@ -117,7 +116,7 @@ public class CardController extends AbstractController {
 			if (ret.length() == 0) {
 				return 0.0;
 			} else {
-				return (double) (int)ret.getJSONObject(0).get(body.getMetrics().get(metric).getDisplayName());
+				return (double) (int)ret.getJSONObject(0).get(body.getMetricMap().get(metric).getDisplayName());
 			}
 		} catch (JSONException e1) {
 			return 0.0;
@@ -131,12 +130,12 @@ public class CardController extends AbstractController {
 	 * @return
 	 */
 	private boolean checkFields(RequestBody body, Response response) {
-		if (body.getFields().size() > 0 || body.getMetrics().size() != 1) {
+		if (body.getFields().size() > 0 || body.getMetricMap().size() != 1) {
 			response.setResponseCode(400);
 			response.setException(new Exception("Fields only allow one metric"));
 			return true;
 		} else {
-			metric = body.getMetrics().keySet().stream().findFirst().get();
+			metric = body.getMetricMap().keySet().stream().findFirst().get();
 		}
 		return false;
 	}

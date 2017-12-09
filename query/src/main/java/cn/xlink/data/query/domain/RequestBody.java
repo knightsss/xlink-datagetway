@@ -34,6 +34,9 @@ public class RequestBody {
     private List<String> fields;
 
     @JsonProperty
+    private List<String> metrics;
+
+    @JsonProperty
     private List<String> sorts;
 
     @JsonProperty
@@ -49,7 +52,7 @@ public class RequestBody {
     private Map<String, DatasetMetadataFieldEntity> fieldMap;
     private Map<String, String> sourceMap = new HashMap<>();
     private TimeField timeField;
-    private Map<String, Metric> metrics;
+    private Map<String, Metric> metricMap;
     private Map<String, Object> preFilters;
     private DateFormat fmt =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -76,6 +79,7 @@ public class RequestBody {
      * @throws Exception
      */
     public void init(DatasetCacheStore cache) throws Exception{
+        if (invalidMetrics() && invalidFields()) throw new Exception("field or metric must have at least one");
         this.cache = cache;
         this.engine = cache.getEngine();
 
@@ -110,14 +114,11 @@ public class RequestBody {
             fieldMap.putAll(cache.getTimeMap());
         }
 
-        // fieldMap中加入时间字段
-
-
         this.fieldMap = fieldMap;
 
         checkTimezone();
         checkTimeField();
-        changeFieldsToMetrics();
+        convertMetricsToMap();
     }
 
     public boolean invalid(){
@@ -142,6 +143,10 @@ public class RequestBody {
 
     public boolean invalidFields() {
         return (fields == null || fields.size() == 0);
+    }
+
+    public boolean invalidMetrics() {
+        return (metrics == null || metrics.size() == 0);
     }
 
     public boolean invalidPagination() {
@@ -175,13 +180,13 @@ public class RequestBody {
                 || preFilters.size() == 0);
     }
 
-    public boolean invalidMetrics() {
-        return (metrics == null || metrics.size() == 0);
+    public boolean invalidMetricMap() {
+        return (metricMap == null || metricMap.size() == 0);
     }
 
     public boolean useJson() {
-        if (!invalidMetrics()) {
-            for (Metric metric: metrics.values()) {
+        if (!invalidMetricMap()) {
+            for (Metric metric: metricMap.values()) {
                 if (metric.useJson()) {
                     return true;
                 }
@@ -213,25 +218,21 @@ public class RequestBody {
     }
 
     /**
-     * field to metrics
+     * field to metricMap
      * @return
      */
-    private void changeFieldsToMetrics() {
-        if (!invalidFields()) {
-            List<String> newFields = new ArrayList<>();
-            for (String field: fields) {
+    private void convertMetricsToMap() {
+        if (!invalidMetrics()) {
+            for (String field: metrics) {
                 Matcher m = pattern.matcher(field);
                 if (m.find()){
-                    if (metrics == null) {
-                        this.setMetrics(new HashMap<>());
+                    if (metricMap == null) {
+                        this.setMetricMap(new HashMap<>());
                     }
-                    metrics.put(field, new Metric(m.group(2), m.group(1)));
-                } else {
-                    newFields.add(field);
+                    metricMap.put(field, new Metric(m.group(2), m.group(1)));
                 }
             }
-            fields = newFields;
-            if (metrics != null && metrics.size() > 0) {
+            if (metricMap != null && metricMap.size() > 0) {
                 this.setQueryType(QUERY_TYPE_AGGREGATE);
             } else {
                 this.setQueryType(QUERY_TYPE_SELECT);
@@ -250,8 +251,8 @@ public class RequestBody {
             sourceMap.put(source, cache.getSourceMap().get(source));
             return fieldMap.get(field).getField();
         }
-        if (!invalidMetrics()
-                && metrics.get(field) != null) return metrics.get(field).getDisplayName();
+        if (!invalidMetricMap()
+                && metricMap.get(field) != null) return metricMap.get(field).getDisplayName();
         return field;
     }
 
@@ -323,6 +324,14 @@ public class RequestBody {
         this.fields = fields;
     }
 
+    public List<String> getMetrics() {
+        return metrics;
+    }
+
+    public void setMetrics(List<String> metrics) {
+        this.metrics = metrics;
+    }
+
     public DatasetCacheStore getCache() {
         return cache;
     }
@@ -355,12 +364,12 @@ public class RequestBody {
         this.timeField = timeField;
     }
 
-    public Map<String, Metric> getMetrics() {
-        return metrics;
+    public Map<String, Metric> getMetricMap() {
+        return metricMap;
     }
 
-    public void setMetrics(Map<String, Metric> metrics) {
-        this.metrics = metrics;
+    public void setMetricMap(Map<String, Metric> metricMap) {
+        this.metricMap = metricMap;
     }
 
     public List<String> getSorts() {

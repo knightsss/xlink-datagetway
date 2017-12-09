@@ -116,7 +116,7 @@ public class AbstractControllerTest {
         expectedMetrics.put("$avg(b)", new Metric("b", "avg"));
         expectedMetrics.put("$sum(c)", new Metric("c", "sum"));
 
-        assertEquals(expectedMetrics.toString(), actual.getMetrics().toString());
+        assertEquals(expectedMetrics.toString(), actual.getMetricMap().toString());
     }
 
     @Test
@@ -210,7 +210,7 @@ public class AbstractControllerTest {
         expectedMetrics.put("$avg(b)", new Metric("b", "avg"));
         expectedMetrics.put("$sum(c)", new Metric("c", "sum"));
 
-        assertEquals(expectedMetrics.toString(), actual.getMetrics().toString());
+        assertEquals(expectedMetrics.toString(), actual.getMetricMap().toString());
     }
 
     @Test

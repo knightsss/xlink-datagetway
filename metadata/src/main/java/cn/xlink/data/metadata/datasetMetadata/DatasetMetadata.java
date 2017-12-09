@@ -39,10 +39,6 @@ implements Linkable
 	@StringValidation(name="Dataset Desc")
 	private String description;
 
-	@JsonProperty("product_id")
-	@Property("product_id")
-	private String productId;
-
 	private String engine;
 
 	private List<DatasetMetadataFieldEntity> times;
@@ -54,6 +50,11 @@ implements Linkable
 	private List<DatasetMetadataJoinEntity> joins;
 
 	private List<DatasetMetadataFieldEntity> filters;
+
+	// 动态数据集属性
+	@JsonProperty("jdbc_id")
+	@Property("jdbc_id")
+	private String jdbcId;
 
 	@JsonProperty("is_deleted")
 	@Property("is_deleted")
@@ -93,14 +94,6 @@ implements Linkable
 
 	public void setDescription(String description) {
 		this.description = description;
-	}
-
-	public String getProductId() {
-		return productId;
-	}
-
-	public void setProductId(String productId) {
-		this.productId = productId;
 	}
 
 	public String getEngine() {
@@ -149,6 +142,14 @@ implements Linkable
 
 	public void setFilters(List<DatasetMetadataFieldEntity> filters) {
 		this.filters = filters;
+	}
+
+	public String getJdbcId() {
+		return jdbcId;
+	}
+
+	public void setJdbcId(String jdbcId) {
+		this.jdbcId = jdbcId;
 	}
 
 	public Boolean getDeleted() {

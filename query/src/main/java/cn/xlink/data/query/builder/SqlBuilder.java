@@ -91,14 +91,12 @@ public class SqlBuilder implements Builder{
                     groupByList.add(selectField);
                 }
             }
-        } else if (body.getQueryType() == RequestBody.QUERY_TYPE_SELECT) { // 如果查询类型是源数据，不是聚合，
-            selectList.add("*");
         }
 
         // 处理统计的字段，放入select statement
         switch (body.getQueryType()) {
             case RequestBody.QUERY_TYPE_AGGREGATE:
-                for (Metric metric: body.getMetrics().values()) {
+                for (Metric metric: body.getMetricMap().values()) {
                     String changed;
                     if ((changed = metricChangeToSql(metric, metric.getDisplayName())) != null) {
                         selectList.add(changed);
@@ -476,8 +474,8 @@ public class SqlBuilder implements Builder{
     private String filterFieldToSql(String key) {
         if (body.getFieldMap().get(key) != null) {
             return body.fieldExchange(key);
-        } else if (!body.invalidMetrics() && body.getMetrics().get(key) != null) {
-            return metricChangeToSql(body.getMetrics().get(key), "");
+        } else if (!body.invalidMetricMap() && body.getMetricMap().get(key) != null) {
+            return metricChangeToSql(body.getMetricMap().get(key), "");
         }
         return key;
     }
