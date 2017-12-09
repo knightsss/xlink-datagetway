@@ -1,6 +1,8 @@
-package cn.xlink.data.metadata.pageMetadata;
+package cn.xlink.data.metadata.jdbcMetadata;
 
 import cn.xlink.data.metadata.Constants;
+import cn.xlink.data.metadata.pageMetadata.PageMetadataComponentEntity;
+import cn.xlink.data.metadata.pageMetadata.PageMetadataLayersEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,27 +31,17 @@ import java.util.*;
  */
 
 /*数据库中集合名称*/
-@Entity("page_metadata")
+@Entity("jdbc_metadata")
 @TokenBindings({
 	@BindToken(value= Constants.Url.PAGE_ID, field="id")
 })
 @JsonPOJOBuilder
 @JsonIgnoreProperties(value = { "objectId", "uniqueFilter", "id", "deleted" })
 /*@JsonIgnoreProperties(value = { "objectId", "uniqueFilter", "deleted" })*/
-public class PageMetadata
+public class JdbcMetadata
 extends AbstractMongodbEntity
 implements Linkable
 {
-	/*战图名称 必须字段*/
-	@StringValidation(name="Page Name")
-	private String name;
-
-	/*战图描述*/
-	@StringValidation(name="Page Desc")
-	private String description;
-
-	/*缩略图*/
-	private String thumbnail;
 
 	/*企业ID*/
 /*	@StringValidation(name="corpId")*/
@@ -57,20 +49,39 @@ implements Linkable
 	@Property("corp_id")
 	private String corpId;
 
-	/*分享密码*/
+	/*JDBC名称 配置名称*/
+	@StringValidation(name="Jdbc Name")
+	private String name;
+
+	/*JDBC驱动名称*/
+	@StringValidation(name="JDBC Driver Name")
+	private String drivername;
+
+	/*用户名称*/
+	private String username;
+
+	/*数据库连接密码*/
 	private String password;
 
-	/*站图样式*/
-	private Map<String, Object> style;
+	/*数据库域名地址或ip地址*/
+	private String host;
 
-	/*图层样式列表*/
-	private List<PageMetadataLayersEntity> layers;
+	/*数据库连接端口*/
+	private String port;
 
-	/*components 组件*/
-	private List<PageMetadataComponentEntity>  components;
+	/*数据库名*/
+	private String database;
+
+	/*对象，连接属性*/
+	private String query;
+
+	/*表*/
+//	private ArrayList<String> tables;
+	private List<JdbcMetadataTableEntity> tables;
 
 	/*战图扩展配置*/
 	private Map<String, Object> options;
+
 
 	@JsonProperty("is_deleted")
 	@Property("is_deleted")
@@ -84,55 +95,21 @@ implements Linkable
 	@JsonProperty("updated_at")
 	private Date updatedAt;
 
-	@NotSaved
-	DateFormat ISO8601UTC = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
+/*	@NotSaved
+	DateFormat ISO8601UTC = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");*/
 
-	public PageMetadata(){}
+	public JdbcMetadata(){}
 
-	public PageMetadata(String name) {
+	public JdbcMetadata(String name) {
 		this.name = name;
 	}
 
-	public QueryFilter getUniqueFilter(){
+/*	public QueryFilter getUniqueFilter(){
 		List<FilterComponent> list = new ArrayList<FilterComponent>();
 		list.add(new FilterComponent("corp_id", FilterOperator.EQUALS, corpId));
 		System.out.println("list size is " + list.size());
 		return new QueryFilter(list);
-	}
-
-
-/*	@Override
-	public String getId() {
-		return getId().toString();
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}*/
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getThumbnail() {
-		return thumbnail;
-	}
-
-	public void setThumbnail(String thumbnail) {
-		this.thumbnail = thumbnail;
-	}
 
 	public String getCorpId() {
 		return corpId;
@@ -142,28 +119,76 @@ implements Linkable
 		this.corpId = corpId;
 	}
 
-	public Map<String, Object> getStyle() {
-		return style;
+	public String getDrivername() {
+		return drivername;
 	}
 
-	public void setStyle(Map<String, Object> style) {
-		this.style = style;
+	public void setDrivername(String drivername) {
+		this.drivername = drivername;
 	}
 
-	public List<PageMetadataLayersEntity> getLayers() {
-		return layers;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setLayers(List<PageMetadataLayersEntity> layers) {
-		this.layers = layers;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
-	public List<PageMetadataComponentEntity> getComponents() {
-		return components;
+	public String getHost() {
+		return host;
 	}
 
-	public void setComponents(List<PageMetadataComponentEntity> components) {
-		this.components = components;
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	public String getPort() {
+		return port;
+	}
+
+	public void setPort(String port) {
+		this.port = port;
+	}
+
+	public String getDatabase() {
+		return database;
+	}
+
+	public void setDatabase(String database) {
+		this.database = database;
+	}
+
+	public String getQuery() {
+		return query;
+	}
+
+	public void setQuery(String query) {
+		this.query = query;
+	}
+
+	public List<JdbcMetadataTableEntity> getTables() {
+		return tables;
+	}
+
+	public void setTables(List<JdbcMetadataTableEntity> tables) {
+		this.tables = tables;
+	}
+
+/*	public DateFormat getISO8601UTC() {
+		return ISO8601UTC;
+	}
+
+	public void setISO8601UTC(DateFormat ISO8601UTC) {
+		this.ISO8601UTC = ISO8601UTC;
+	}*/
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getPassword() {
@@ -206,24 +231,18 @@ implements Linkable
 		this.updatedAt = date == null?new Date():new Date(date.getTime());
 	}
 
-/*	@Override
-	public String toString() {
-		return "DatasetFigureMetadata{" +
-				"name='" + name + '\'' +
-				", fields=" + fields +
-				", sources=" + sources +
-				", joins=" + joins +
-				", isDeleted=" + isDeleted +
-				'}';
+	/*public QueryFilter getUniqueFilter(){
+		List<FilterComponent> list = new ArrayList<FilterComponent>();
+		list.add(new FilterComponent("corp_id", FilterOperator.EQUALS, corpId));
+		System.out.println("list size is " + list.size());
+		return new QueryFilter(list);
 	}*/
 
 	public Map<String, Object> toMap() {
 		Map<String, Object> map = new HashMap<>();
 		map.put("name", name);
-		map.put("description", description);
-		map.put("thumbnail", thumbnail);
 		map.put("id", getId().toString());
-		map.put("update_time", ISO8601UTC.format(getUpdatedAt()));
+		/*map.put("update_time", ISO8601UTC.format(getUpdatedAt()));*/
 		return map;
 	}
 

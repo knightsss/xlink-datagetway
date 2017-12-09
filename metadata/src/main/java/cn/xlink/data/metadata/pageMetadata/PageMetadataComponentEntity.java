@@ -51,7 +51,7 @@ implements Linkable
 	private List<PageMetadataDataEntity> datas;
 
 	/*图表内容配置*/
-	private Map<String, Object> content;
+	/*private Map<String, Object> content;*/
 
 	/*图表样式配置*/
 	private Map<String, Object> style;
@@ -115,13 +115,13 @@ implements Linkable
 		this.datas = datas;
 	}
 
-	public Map<String, Object> getContent() {
+/*	public Map<String, Object> getContent() {
 		return content;
 	}
 
 	public void setContent(Map<String, Object> content) {
 		this.content = content;
-	}
+	}*/
 
 	public Map<String, Object> getStyle() {
 		return style;

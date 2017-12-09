@@ -10,6 +10,7 @@ public class Constants
 		//TODO: Your URL parameter names here...
 		public static final String SAMPLE_ID = "uuid";
 		public static final String PAGE_ID = "page_id";
+		public static final String JDBC_ID = "jdbc_id";
 	}
 
 	/**
