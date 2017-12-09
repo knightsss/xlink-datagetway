@@ -13,6 +13,10 @@ import cn.xlink.data.core.service.DatapointField;
 import cn.xlink.data.core.service.Service;
 import cn.xlink.data.query.cache.DatasetCache;
 import cn.xlink.data.query.controller.*;
+
+import cn.xlink.data.metadata.jdbcMetadata.JdbcMetadataRepository;
+import cn.xlink.data.metadata.jdbcMetadata.JdbcMetadataService;
+
 import cn.xlink.data.metadata.pageMetadata.PageMetadataRepository;
 import cn.xlink.data.metadata.pageMetadata.PageMetadataService;
 import cn.xlink.data.metadata.datasetMetadata.DatasetMetadataRepository;
@@ -43,9 +47,14 @@ extends Environment
 	private TableController tableController;
 	private ChartController chartController;
 	private DatasetController datasetController;
-	private PageController pageController;
 	private DatasetMetadataService datasetMetadataService;
+
+	private PageController pageController;
 	private PageMetadataService pageMetadataService;
+
+	private JdbcController jdbcController;
+	private JdbcMetadataService jdbcMetadataService;
+
 	private Map<String, Proxy> proxyMap;
 	private Map<String, Service> serviceMap;
 	private Properties properties;
@@ -84,9 +93,15 @@ extends Environment
 
 		DatasetCache.getInstance().init(datasetMetadataService);
 
+		/*page*/
 		PageMetadataRepository pageMetadataRepository = new PageMetadataRepository(mongo.getClient(), mongo.getDbName());
 		PageMetadataService pageMetadataService = new PageMetadataService(pageMetadataRepository);
 		this.pageMetadataService = pageMetadataService;
+
+		/*jdbc*/
+		JdbcMetadataRepository jdbcMetadataRepository = new JdbcMetadataRepository(mongo.getClient(), mongo.getDbName());
+		JdbcMetadataService jdbcMetadataService = new JdbcMetadataService(jdbcMetadataRepository);
+		this.jdbcMetadataService = jdbcMetadataService;
 
 
 		commonController = new CommonController(p, this.proxyMap, this.serviceMap);
@@ -97,6 +112,9 @@ extends Environment
 
 		datasetController = new DatasetController(p, this.proxyMap, this.serviceMap, datasetMetadataService);
 		pageController = new PageController(p, this.proxyMap, this.serviceMap, pageMetadataService);
+
+		/*jdbc*/
+		jdbcController = new JdbcController(p, this.proxyMap, this.serviceMap, jdbcMetadataService);
 	}
 
 	public int getPort()
@@ -154,5 +172,9 @@ extends Environment
 
 	public PageController getPageController() {
 		return pageController;
+	}
+
+	public JdbcController getJdbcController() {
+		return jdbcController;
 	}
 }
