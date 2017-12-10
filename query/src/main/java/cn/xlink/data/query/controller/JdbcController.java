@@ -37,7 +37,7 @@ public class JdbcController extends JdbcMetadataController {
         this.mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
     }
 
-    /*所有战图列表*/
+    /*所有数据库配置列表*/
     public Object readAll(Request request, Response response) {
 
         Map<String, String> queryString = request.getQueryStringMap();
@@ -69,4 +69,8 @@ public class JdbcController extends JdbcMetadataController {
         }
         return null;
     }
+
+//    public List<Object> connectAndGetTables(Request request, Response response) {
+//
+//    }
 }

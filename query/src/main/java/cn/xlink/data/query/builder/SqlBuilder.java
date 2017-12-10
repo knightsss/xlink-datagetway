@@ -352,7 +352,7 @@ public class SqlBuilder implements Builder{
             List<Object> values = (ArrayList<Object>) object;
             sql = (flag? " IN ":" NOT IN ") + "(";
             for (Object v : values) {
-                sql = typeFieldSql(sql, parentKey, v);
+                sql = typeFieldSql(sql, parentKey, v) + ",";
             }
             return sql.replaceAll(",$", ")");
         } else if (object instanceof java.util.HashMap) {

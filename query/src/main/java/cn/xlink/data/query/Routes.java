@@ -57,7 +57,7 @@ public abstract class Routes
 				.name(Constants.Routes.DATASET_LIST);
 
 		server.uri("/v2/data_platform/dataset/fields.{format}", config.getDatasetController())
-				.action("fields", HttpMethod.POST)
+				.action("fields", HttpMethod.GET)
 				.name(Constants.Routes.DATASET_FIELDS);
 
 		/////////////////////////////////////////////page///////////////////////////////////
