@@ -33,8 +33,14 @@ public class Constants
 
 		public static final String DATASET_LIST = "dataset.list";
 		public static final String DATASET_FIELDS = "dataset.fields";
-		public static final String FIGURE_LIST = "figure.list";
-		public static final String FIGURE_INST = "figure.inst";
+
+		public static final String PAGE_LIST = "page.list";
+		public static final String PAGE_INST = "page.inst";
+		public static final String PAGE_READ_ROUTE = "page.read.route";
+
+		public static final String JDBC_LIST = "jdbc.list";
+		public static final String JDBC_INST = "jdbc.inst";
+		public static final String JDBC_READ_ROUTE = "jdbc.read.route";
 
 		public static final String JDBC_LIST = "jdbc.list";
 		public static final String JDBC_INST = "jdbc.inst";

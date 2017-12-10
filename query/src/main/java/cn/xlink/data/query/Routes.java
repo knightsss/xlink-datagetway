@@ -64,48 +64,24 @@ public abstract class Routes
 		/*通过企业ID获取战图列表*/
 		server.uri("/v2/data_platform/page.{format}", config.getPageController())
 				.action("readAll", HttpMethod.GET)
-				.name(Constants.Routes.FIGURE_LIST);
+				.method(HttpMethod.POST)
+				.name(Constants.Routes.PAGE_LIST);
 
-		/*创建战图*/
-		server.uri("/v2/data_platform/page.{format}", config.getPageController())
-				.action("create", HttpMethod.POST)
-				.name(Constants.Routes.FIGURE_INST);
-
-
-		/*通过战图ID查询战图*/
+		/*通过战图ID查询、更新、删除战图*/
 		server.uri("/v2/data_platform/page/{page_id}.{format}", config.getPageController())
-				.action("read", HttpMethod.GET);
-
-		/*通过战图ID删除战图*/
-		server.uri("/v2/data_platform/page/{page_id}.{format}", config.getPageController())
-				.action("delete", HttpMethod.DELETE);
-
-		/*通过战图ID更新战图*/
-		server.uri("/v2/data_platform/page/{page_id}.{format}", config.getPageController())
-				.action("update", HttpMethod.PUT);
+				.method(HttpMethod.GET, HttpMethod.PUT, HttpMethod.DELETE)
+				.name(Constants.Routes.PAGE_READ_ROUTE);
 
 		//////////////////////////////////////////////////////JDBC//////////////////////////////////
-		/*创建jdbc*/
-		server.uri("/v2/data_platform/jdbc.{format}", config.getJdbcController())
-				.action("create", HttpMethod.POST)
-				.name(Constants.Routes.JDBC_INST);
-
-		/*通过jdbc ID查询jdbc连接*/
-		server.uri("/v2/data_platform/jdbc/{jdbc_id}.{format}", config.getJdbcController())
-				.action("read", HttpMethod.GET);
-
-		/*通过jdbc ID删除战图*/
-		server.uri("/v2/data_platform/jdbc/{jdbc_id}.{format}", config.getJdbcController())
-				.action("delete", HttpMethod.DELETE);
-
-		/*通过jdbc ID更新战图*/
-		server.uri("/v2/data_platform/jdbc/{jdbc_id}.{format}", config.getJdbcController())
-				.action("update", HttpMethod.PUT);
-
 		/*通过企业ID获取jdbc列表*/
 		server.uri("/v2/data_platform/jdbc.{format}", config.getJdbcController())
 				.action("readAll", HttpMethod.GET)
+				.method(HttpMethod.POST)
 				.name(Constants.Routes.JDBC_LIST);
 
+		/*通过jdbc ID查询 删除 更新jdbc dataset*/
+		server.uri("/v2/data_platform/jdbc/{jdbc_id}.{format}", config.getJdbcController())
+				.method(HttpMethod.GET, HttpMethod.PUT, HttpMethod.DELETE)
+				.name(Constants.Routes.JDBC_READ_ROUTE);
     }
 }
