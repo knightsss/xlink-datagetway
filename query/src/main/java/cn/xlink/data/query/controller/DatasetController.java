@@ -52,22 +52,33 @@ public class DatasetController extends AbstractController{
     }
 
     public void fields(Request request, Response response) {
-        DatasetMetadata dataset = request.getBodyAs(DatasetMetadata.class, "Body details not provided");
+        String name = request.getQueryStringMap().getOrDefault("name", null);
+        String productId = request.getQueryStringMap().getOrDefault("product_id", "");
+
+        if (name == null) {
+            response.setException(new Exception("dataset is required"));
+            response.setResponseCode(400);
+            return;
+        }
+
         // check auth
         if (authCheck(request, response) == null) return;
+
+        DatasetMetadata datasetEntity = new DatasetMetadata();
+        datasetEntity.setName(name);
 
         Map<String, List> data = new HashMap<>();
 
         DatasetMetadata metadata;
-        if ((metadata = datasetService.findByEntity(dataset)) != null) {
+        if ((metadata = datasetService.findByEntity(datasetEntity)) != null) {
             // 需要检查字段的来源
             List<Map<String, Object>> fields = new ArrayList<>();
             for (DatasetMetadataFieldEntity field: metadata.getFields()) {
                 switch (DataType.fromType(field.getType())) {
                     case Datapoint:
-                        if (dataset.getProductId() != null && !dataset.getProductId().equals("")) {
+                        if (!productId.equals("")) {
                             try {
-                                String path = field.getField().replaceAll("\\{.*\\}", dataset.getProductId());
+                                String path = field.getField().replaceAll("\\{.*\\}", productId);
                                 JSONArray datapointFields = new JSONArray(this.getServiceMap().get(SERVICE_DATAPOINT).serve(
                                         request,
                                         response,

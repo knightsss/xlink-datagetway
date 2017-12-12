@@ -3,8 +3,6 @@ package cn.xlink.data.query.builder;
 import cn.xlink.data.query.builder.json.*;
 import cn.xlink.data.query.domain.Metric;
 import cn.xlink.data.query.domain.RequestBody;
-import cn.xlink.data.query.builder.json.*;
-import cn.xlink.data.query.builder.json.*;
 import cn.xlink.data.query.domain.DruidJsonQueryBody;
 import cn.xlink.data.core.utils.DataType;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -94,8 +92,8 @@ public class JsonBuilder implements Builder{
             Set<String> aggregationSet = new HashSet<>();
             Set<String> postAggregationSet = new HashSet<>();
 
-            if (!body.invalidMetrics()) {
-                for (Metric metric: body.getMetrics().values()) {
+            if (!body.invalidMetricMap()) {
+                for (Metric metric: body.getMetricMap().values()) {
                     if (!metric.invalid()) {
                         String key = metric.getName();
 //                        if (aggregationMap.getOrDefault(key, null) == null) {

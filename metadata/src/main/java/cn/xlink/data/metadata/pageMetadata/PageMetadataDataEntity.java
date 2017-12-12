@@ -26,8 +26,11 @@ implements Linkable
 	@StringValidation(name="dataset name", required=true)
 	private String dataset;
 	
-	/*维度度量列表fields*/
+	/*维度列表fields*/
 	private List<String> fields;
+
+	/*度量列表metrics*/
+	private List<String> metrics;
 
 	/*筛选对象filters*/
 	private Map<String, Object> filters;
@@ -52,6 +55,14 @@ implements Linkable
 
 	public void setFields(List<String> fields) {
 		this.fields = fields;
+	}
+
+	public List<String> getMetrics() {
+		return metrics;
+	}
+
+	public void setMetrics(List<String> metrics) {
+		this.metrics = metrics;
 	}
 
 	public Map<String, Object> getFilters() {

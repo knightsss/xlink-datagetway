@@ -57,19 +57,15 @@ public abstract class Routes
 				.name(Constants.Routes.DATASET_LIST);
 
 		server.uri("/v2/data_platform/dataset/fields.{format}", config.getDatasetController())
-				.action("fields", HttpMethod.POST)
+				.action("fields", HttpMethod.GET)
 				.name(Constants.Routes.DATASET_FIELDS);
 
 		/////////////////////////////////////////////page///////////////////////////////////
 		/*通过企业ID获取战图列表*/
 		server.uri("/v2/data_platform/page.{format}", config.getPageController())
 				.action("readAll", HttpMethod.GET)
+				.method(HttpMethod.POST)
 				.name(Constants.Routes.PAGE_LIST);
-
-		/*创建战图*/
-		server.uri("/v2/data_platform/page.{format}", config.getPageController())
-				.action("create", HttpMethod.POST)
-				.name(Constants.Routes.PAGE_INST);
 
 		/*通过战图ID查询、更新、删除战图*/
 		server.uri("/v2/data_platform/page/{page_id}.{format}", config.getPageController())
@@ -85,11 +81,8 @@ public abstract class Routes
 		/*通过企业ID获取jdbc列表*/
 		server.uri("/v2/data_platform/jdbc.{format}", config.getJdbcController())
 				.action("readAll", HttpMethod.GET)
+				.method(HttpMethod.POST)
 				.name(Constants.Routes.JDBC_LIST);
-		/*创建jdbc*/
-		server.uri("/v2/data_platform/jdbc.{format}", config.getJdbcController())
-				.action("create", HttpMethod.POST)
-				.name(Constants.Routes.JDBC_INST);
 
 		/*通过jdbc ID查询 删除 更新jdbc dataset*/
 		server.uri("/v2/data_platform/jdbc/{jdbc_id}.{format}", config.getJdbcController())

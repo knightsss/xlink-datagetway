@@ -43,6 +43,9 @@ public class Constants
 		public static final String JDBC_INST = "jdbc.inst";
 		public static final String JDBC_READ_ROUTE = "jdbc.read.route";
 
+		public static final String JDBC_LIST = "jdbc.list";
+		public static final String JDBC_INST = "jdbc.inst";
+
 		public static final String OFFLINE_QUERY = "offline.query";
 	}
 }
