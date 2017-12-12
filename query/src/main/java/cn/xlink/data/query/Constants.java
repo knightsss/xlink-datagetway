@@ -37,6 +37,7 @@ public class Constants
 		public static final String PAGE_LIST = "page.list";
 		public static final String PAGE_INST = "page.inst";
 		public static final String PAGE_READ_ROUTE = "page.read.route";
+		public static final String PAGE_INDIVIDUAL_UPDATE = "page.individual.update";
 
 		public static final String JDBC_LIST = "jdbc.list";
 		public static final String JDBC_INST = "jdbc.inst";

@@ -76,6 +76,11 @@ public abstract class Routes
 				.method(HttpMethod.GET, HttpMethod.PUT, HttpMethod.DELETE)
 				.name(Constants.Routes.PAGE_READ_ROUTE);
 
+		/*更新战图部分信息*/
+		server.uri("/v2/data_platform/page/individual/{page_id}.{format}", config.getPageController())
+				.action("updateIndividual", HttpMethod.PUT)
+				.name(Constants.Routes.PAGE_INDIVIDUAL_UPDATE);
+
 		//////////////////////////////////////////////////////JDBC//////////////////////////////////
 		/*通过企业ID获取jdbc列表*/
 		server.uri("/v2/data_platform/jdbc.{format}", config.getJdbcController())
